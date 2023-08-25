@@ -1,14 +1,21 @@
 @echo off
+setlocal
+
 set "source_folder=D:\dataFile"
 set "destination_folder=F:\dataFile"
 
-echo Menjalankan sinkronisasi eksternal...
-xcopy "%source_folder%" "%destination_folder%" /s /e /d /i
+call :syncFolders "%source_folder%" "%destination_folder%"
 
-echo Menjalankan sinkronisasi internal...
 set "source_folder=F:\dataFile"
 set "destination_folder=D:\dataFile"
 
-xcopy "%source_folder%" "%destination_folder%" /s /e /d /i
+call :syncFolders "%source_folder%" "%destination_folder%"
 
 echo Sinkronisasi selesai.
+
+endlocal
+exit /b
+
+:syncFolders
+robocopy %1 %2 /E /ZB /COPY:DAT /XO /XD node_modules /MT:12
+exit /b
